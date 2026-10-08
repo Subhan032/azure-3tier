@@ -6,13 +6,22 @@ resource "azurerm_user_assigned_identity" "github_actions" {
   tags                = local.common_tags
 }
 
-# Federated Identity Credential for GitHub Actions OIDC authentication
+# Federated Identity Credential for GitHub Actions OIDC authentication (current GitHub repository)
 resource "azurerm_federated_identity_credential" "github_actions" {
   name                      = local.github_actions_federated_credential_name
   user_assigned_identity_id = azurerm_user_assigned_identity.github_actions.id
   issuer                    = "https://token.actions.githubusercontent.com"
   audience                  = ["api://AzureADTokenExchange"]
   subject                   = "repo:${local.github_repository}:ref:refs/heads/${local.github_default_branch}"
+}
+
+# Secondary Federated Credential for legacy repository name (guarantees compatibility)
+resource "azurerm_federated_identity_credential" "github_actions_legacy" {
+  name                      = "${local.github_actions_federated_credential_name}-legacy"
+  user_assigned_identity_id = azurerm_user_assigned_identity.github_actions.id
+  issuer                    = "https://token.actions.githubusercontent.com"
+  audience                  = ["api://AzureADTokenExchange"]
+  subject                   = "repo:Subhan032/azure-3tier-task-manager:ref:refs/heads/${local.github_default_branch}"
 }
 
 # Role Assignment: AcrPush on ACR for GitHub Actions identity

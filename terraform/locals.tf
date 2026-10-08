@@ -19,7 +19,7 @@ locals {
   frontend_app_name     = "app-${var.project_name}-${var.environment}-frontend"
   backend_app_name      = "app-${var.project_name}-${var.environment}-backend"
 
-  github_repository     = "Subhan032/azure-3tier-task-manager"
+  github_repository     = "Subhan032/azure-3tier"
   github_default_branch = "main"
 
   github_actions_identity_name             = "uami-${var.project_name}-${var.environment}-github"
