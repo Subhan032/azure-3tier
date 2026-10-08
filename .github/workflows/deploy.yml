@@ -1,0 +1,54 @@
+name: Deploy to Azure
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to Azure via OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Log in to Azure Container Registry
+        run: |
+          az acr login --name acrazure3tierdev
+
+      - name: Build and push frontend image
+        run: |
+          docker build -t acrazure3tierdev.azurecr.io/frontend:${{ github.sha }} ./frontend
+          docker push acrazure3tierdev.azurecr.io/frontend:${{ github.sha }}
+
+      - name: Build and push backend image
+        run: |
+          docker build -t acrazure3tierdev.azurecr.io/backend:${{ github.sha }} ./backend
+          docker push acrazure3tierdev.azurecr.io/backend:${{ github.sha }}
+
+      - name: Deploy frontend container to Azure App Service
+        run: |
+          az webapp config container set \
+            --name app-azure-3tier-dev-frontend \
+            --resource-group rg-azure-3tier-dev \
+            --container-image-name acrazure3tierdev.azurecr.io/frontend:${{ github.sha }}
+
+      - name: Deploy backend container to Azure App Service
+        run: |
+          az webapp config container set \
+            --name app-azure-3tier-dev-backend \
+            --resource-group rg-azure-3tier-dev \
+            --container-image-name acrazure3tierdev.azurecr.io/backend:${{ github.sha }}
+

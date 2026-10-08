@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Azure Task Manager</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Azure Task Manager</h1>
+      <p class="subtitle">A simple 3-tier task management application</p>
+    </header>
+
+    <!-- Error message banner (hidden by default) -->
+    <div id="error-banner" class="error-banner hidden" role="alert"></div>
+
+    <!-- Task creation form -->
+    <form id="task-form" class="task-form">
+      <input
+        type="text"
+        id="task-input"
+        class="task-input"
+        placeholder="Enter a new task..."
+        autocomplete="off"
+        required
+      >
+      <button type="submit" id="add-btn" class="btn btn-primary">Add Task</button>
+    </form>
+
+    <!-- Task list section -->
+    <section class="task-section">
+      <ul id="task-list" class="task-list"></ul>
+      <div id="empty-state" class="empty-state hidden">
+        <p>No tasks yet. Add a task above to get started!</p>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
