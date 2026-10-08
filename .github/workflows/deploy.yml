@@ -13,9 +13,26 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Debug GitHub OIDC context
+        shell: bash
+        run: |
+          echo "========================================"
+          echo "GitHub OIDC Debug Information"
+          echo "========================================"
+          echo "Repository:          $GITHUB_REPOSITORY"
+          echo "Repository Owner:    $GITHUB_REPOSITORY_OWNER"
+          echo "Repository Owner ID: $GITHUB_REPOSITORY_OWNER_ID"
+          echo "Repository ID:       $GITHUB_REPOSITORY_ID"
+          echo "Ref:                 $GITHUB_REF"
+          echo "Event:               $GITHUB_EVENT_NAME"
+          echo "Workflow:            $GITHUB_WORKFLOW"
+          echo "Run ID:              $GITHUB_RUN_ID"
+          echo "========================================"
 
       - name: Log in to Azure via OIDC
         uses: azure/login@v2
